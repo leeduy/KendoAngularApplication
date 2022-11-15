@@ -1,0 +1,23 @@
+<my-grid
+  [dataSource]="gridData"
+  [screenInfo]="screens"
+  [editable]="true"
+></my-grid>
+
+<ng-template #testTemplate let-dataItem="dataItem" let-field="field">
+  <div style="color: red">{{ dataItem[field] }}</div>
+</ng-template>
+
+<ng-template
+  #testEditTemplate
+  let-dataItem="dataItem"
+  let-field="field"
+  let-formGroup="formGroup"
+>
+  <kendo-numerictextbox
+    [value]="dataItem[field]"
+    [spinners]="false"
+    [formControl]="formGroup.get(field)"
+  >
+  </kendo-numerictextbox>
+</ng-template>

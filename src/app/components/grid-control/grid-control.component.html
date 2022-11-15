@@ -1,0 +1,41 @@
+<kendo-grid
+  [kendoGridBinding]="dataSource"
+  [group]="groups"
+  (cellClick)="
+    editable
+      ? editableHandler
+        ? editableHandler
+        : cellClickHandler($event)
+      : null
+  "
+>
+  <kendo-grid-column
+    *ngFor="let screen of screenInfo"
+    [field]="screen.name"
+    [title]="screen.alias"
+    [hidden]="screen.hidden"
+    [editor]="screen.editor"
+  >
+    <ng-template
+      kendoGridEditTemplate
+      let-dataItem="dataItem"
+      let-formGroup="formGroup"
+      *ngIf="screen.editTemplate"
+    >
+      <ng-container
+        [ngTemplateOutlet]="screen.editTemplate"
+        [ngTemplateOutletContext]="{
+          dataItem: dataItem,
+          field: screen.name,
+          formGroup: formGroup
+        }"
+      ></ng-container>
+    </ng-template>
+    <ng-template kendoGridCellTemplate let-dataItem *ngIf="screen.template">
+      <ng-container
+        [ngTemplateOutlet]="screen.template"
+        [ngTemplateOutletContext]="{ dataItem: dataItem, field: screen.name }"
+      ></ng-container>
+    </ng-template>
+  </kendo-grid-column>
+</kendo-grid>
