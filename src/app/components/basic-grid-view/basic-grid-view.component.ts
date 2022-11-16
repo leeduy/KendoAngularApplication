@@ -11,6 +11,9 @@ export class BasicGridViewComponent implements OnInit {
   @ViewChild('testEditTemplate', { static: true })
   testEditTemplate: TemplateRef<any>;
 
+  templates: Array<{ field: string; template: TemplateRef<any> }>;
+  editTemplates: Array<{ field: string; template: TemplateRef<any> }>;
+
   screens: ScreenInfo[];
 
   gridData: any[];
@@ -33,7 +36,7 @@ export class BasicGridViewComponent implements OnInit {
         alias: 'ProductName',
         group: false,
         hidden: false,
-        template: this.testTemplate,
+        template: null,
         editor: 'text',
         editTemplate: null,
       },
@@ -42,9 +45,27 @@ export class BasicGridViewComponent implements OnInit {
         alias: 'UnitPrice',
         group: false,
         hidden: false,
-        template: this.testTemplate,
+        template: null,
         editor: 'numeric',
-        editTemplate: this.testEditTemplate,
+        editTemplate: null,
+      },
+    ];
+
+    this.templates = [
+      {
+        field: 'ProductName',
+        template: this.testTemplate,
+      },
+      {
+        field: 'UnitPrice',
+        template: this.testTemplate,
+      },
+    ];
+
+    this.editTemplates = [
+      {
+        field: 'UnitPrice',
+        template: this.testEditTemplate,
       },
     ];
 
