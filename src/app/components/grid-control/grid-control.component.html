@@ -1,13 +1,7 @@
 <kendo-grid
-  [kendoGridBinding]="dataSource"
+  [data]="dataSource || dataSourceGroup"
   [group]="groups"
-  (cellClick)="
-    editable
-      ? editableHandler
-        ? editableHandler
-        : cellClickHandler($event)
-      : null
-  "
+  (cellClick)="editable ? cellClickHandler($event) : null"
 >
   <kendo-grid-column
     *ngFor="let screen of screenInfo"

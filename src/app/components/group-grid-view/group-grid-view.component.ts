@@ -7,41 +7,43 @@ import { ScreenInfo } from 'src/app/models/model';
   styleUrls: ['./group-grid-view.component.scss'],
 })
 export class GroupGridViewComponent implements OnInit {
-  screens: ScreenInfo[] = [
-    {
-      name: 'ProductID',
-      alias: 'ProductID',
-      group: true,
-      hidden: false,
-      template: null,
-      editor: 'numeric',
-      editTemplate: null,
-    },
-    {
-      name: 'ProductName',
-      alias: 'ProductName',
-      group: false,
-      hidden: false,
-      template: null,
-      editor: 'text',
-      editTemplate: null,
-    },
-    {
-      name: 'UnitPrice',
-      alias: 'UnitPrice',
-      group: false,
-      hidden: false,
-      template: null,
-      editor: 'numeric',
-      editTemplate: null,
-    },
-  ];
+  screens: ScreenInfo[];
 
   gridData: any[];
 
   constructor() {}
 
   ngOnInit(): void {
+    this.screens = [
+      {
+        name: 'ProductID',
+        alias: 'ProductID',
+        group: true,
+        hidden: false,
+        template: null,
+        editor: 'numeric',
+        editTemplate: null,
+      },
+      {
+        name: 'ProductName',
+        alias: 'ProductName',
+        group: false,
+        hidden: false,
+        template: null,
+        editor: 'text',
+        editTemplate: null,
+      },
+      {
+        name: 'UnitPrice',
+        alias: 'UnitPrice',
+        group: false,
+        hidden: false,
+        template: null,
+        editor: 'numeric',
+        editTemplate: null,
+      },
+    ];
+
     this.gridData = [
       {
         ProductID: 1,

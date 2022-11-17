@@ -5,6 +5,7 @@ import {
   EventEmitter,
   Input,
   NgZone,
+  Output,
   Renderer2,
   TemplateRef,
 } from '@angular/core';
@@ -38,7 +39,7 @@ import {
   SortService,
 } from '@progress/kendo-angular-grid';
 import { L10N_PREFIX, LocalizationService } from '@progress/kendo-angular-l10n';
-import { GroupDescriptor } from '@progress/kendo-data-query';
+import { groupBy, GroupDescriptor } from '@progress/kendo-data-query';
 import { ScreenInfo } from 'src/app/models/model';
 
 @Component({
@@ -79,20 +80,155 @@ import { ScreenInfo } from 'src/app/models/model';
   ],
 })
 export class GridControlComponent extends GridComponent {
-  @Input() screenInfo: ScreenInfo[];
-  @Input() templates: Array<{
-    field: string;
-    template: TemplateRef<any> | null;
-  }>;
-  @Input() editTemplates: Array<{
-    field: string;
-    template: TemplateRef<any> | null;
-  }>;
-  @Input() dataSource: any;
-  @Input() editable: boolean;
-  @Input() editableHandler: EventEmitter<CellClickEvent>;
-
+  dataSourceGroup: any;
   groups: Array<GroupDescriptor>;
+
+  //#region screenInfo
+  private _screenInfo: ScreenInfo[];
+  @Input()
+  public set screenInfo(value: ScreenInfo[]) {
+    this._screenInfo = value;
+
+    // templates
+    let fieldTemplates = this.templates?.map((q) => q.field);
+
+    if (fieldTemplates && fieldTemplates.length > 0) {
+      this.screenInfo
+        .filter((q) => fieldTemplates.includes(q.name))
+        .forEach((val, index) => {
+          let tmpTemplate = this.templates.find((q) => q.field == val.name);
+          if (tmpTemplate) {
+            val.template = tmpTemplate.template;
+          }
+        });
+    }
+
+    // edit templates
+    let fieldEditTemplates = this.editTemplates?.map((q) => q.field);
+
+    if (fieldEditTemplates && fieldEditTemplates.length > 0) {
+      this.screenInfo
+        .filter((q) => fieldEditTemplates.includes(q.name))
+        .forEach((val, index) => {
+          let tmpEditTemplate = this.editTemplates.find(
+            (q) => q.field == val.name
+          );
+          if (tmpEditTemplate) {
+            val.editTemplate = tmpEditTemplate.template;
+          }
+        });
+    }
+
+    // group
+    let fieldGroup = this.screenInfo.filter((q) => q.group).map((q) => q.name);
+
+    if (fieldGroup.length > 0) {
+      this.groups = [];
+      fieldGroup.forEach((field, index) => {
+        this.groups.push({ field: field });
+      });
+
+      this.dataSourceGroup = groupBy(this.dataSource, this.groups);
+      this.dataSource = null;
+    }
+  }
+  public get screenInfo(): ScreenInfo[] {
+    return this._screenInfo;
+  }
+  //#endregion screenInfo
+
+  //#region dataSource
+  private _dataSource: any;
+  @Input()
+  public set dataSource(value: any) {
+    this._dataSource = value;
+
+    if (this.groups?.length > 0 && this._dataSource != null) {
+      this.dataSourceGroup = groupBy(this._dataSource, this.groups);
+      this.dataSource = null;
+    }
+  }
+  public get dataSource(): any {
+    return this._dataSource;
+  }
+  //#endregion dataSource
+
+  //#region templates
+  private _templates: Array<{
+    field: string;
+    template: TemplateRef<any> | null;
+  }>;
+  @Input()
+  public set templates(
+    value: Array<{
+      field: string;
+      template: TemplateRef<any> | null;
+    }>
+  ) {
+    this._templates = value;
+
+    // templates
+    let fieldTemplates = this._templates?.map((q) => q.field);
+
+    if (fieldTemplates && fieldTemplates.length > 0) {
+      this.screenInfo
+        .filter((q) => fieldTemplates.includes(q.name))
+        .forEach((val, index) => {
+          let tmpTemplate = this._templates.find((q) => q.field == val.name);
+          if (tmpTemplate) {
+            val.template = tmpTemplate.template;
+          }
+        });
+    }
+  }
+  public get templates(): Array<{
+    field: string;
+    template: TemplateRef<any> | null;
+  }> {
+    return this._templates;
+  }
+  //#endregion templates
+
+  //#region editTemplates
+  private _editTemplates: Array<{
+    field: string;
+    template: TemplateRef<any> | null;
+  }>;
+  @Input()
+  public set editTemplates(
+    value: Array<{
+      field: string;
+      template: TemplateRef<any> | null;
+    }>
+  ) {
+    this._editTemplates = value;
+
+    // edit templates
+    let fieldEditTemplates = this._editTemplates?.map((q) => q.field);
+
+    if (fieldEditTemplates && fieldEditTemplates.length > 0) {
+      this.screenInfo
+        .filter((q) => fieldEditTemplates.includes(q.name))
+        .forEach((val, index) => {
+          let tmpEditTemplate = this._editTemplates.find(
+            (q) => q.field == val.name
+          );
+          if (tmpEditTemplate) {
+            val.editTemplate = tmpEditTemplate.template;
+          }
+        });
+    }
+  }
+  public get editTemplates(): Array<{
+    field: string;
+    template: TemplateRef<any> | null;
+  }> {
+    return this._editTemplates;
+  }
+  //#endregion editTemplates
+
+  @Input() editable: boolean;
+  @Output() editableHandler = new EventEmitter<CellClickEvent>();
 
   constructor(
     supportService: BrowserSupportService,
@@ -154,56 +290,21 @@ export class GridControlComponent extends GridComponent {
   }
 
   cellClickHandler(args: CellClickEvent): void {
-    if (!args.isEdited) {
-      args.sender.editCell(
-        args.rowIndex,
-        args.columnIndex,
-        this.createFormGroup(args.dataItem)
-      );
+    // Nếu có set hàm riêng sẽ ưu tiên chạy hàm riêng. Ngược lại chạy hàm mặc định.
+    if (this.editableHandler.observed) {
+      this.editableHandler.emit(args);
+    } else {
+      if (!args.isEdited) {
+        args.sender.editCell(
+          args.rowIndex,
+          args.columnIndex,
+          this.createFormGroup(args.dataItem)
+        );
+      }
     }
   }
 
-  override ngOnInit(): void {
-    // templates
-    let fieldTemplates = this.templates?.map((q) => q.field);
-
-    if (fieldTemplates && fieldTemplates.length > 0) {
-      this.screenInfo
-        .filter((q) => fieldTemplates.includes(q.name))
-        .forEach((val, index) => {
-          let tmpTemplate = this.templates.find((q) => q.field == val.name);
-          if (tmpTemplate) {
-            val.template = tmpTemplate.template;
-          }
-        });
-    }
-
-    // edit templates
-    let fieldEditTemplates = this.editTemplates?.map((q) => q.field);
-
-    if (fieldEditTemplates && fieldEditTemplates.length > 0) {
-      this.screenInfo
-        .filter((q) => fieldEditTemplates.includes(q.name))
-        .forEach((val, index) => {
-          let tmpEditTemplate = this.editTemplates.find(
-            (q) => q.field == val.name
-          );
-          if (tmpEditTemplate) {
-            val.editTemplate = tmpEditTemplate.template;
-          }
-        });
-    }
-
-    // group
-    let fieldGroup = this.screenInfo.filter((q) => q.group).map((q) => q.name);
-
-    if (fieldGroup.length > 0) {
-      this.groups = [];
-      fieldGroup.forEach((field, index) => {
-        this.groups.push({ field: field });
-      });
-    }
-  }
+  override ngOnInit(): void {}
 
   override ngAfterViewInit(): void {}
 

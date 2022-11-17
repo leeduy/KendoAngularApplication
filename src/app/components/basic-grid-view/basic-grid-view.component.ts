@@ -1,4 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { CellClickEvent } from '@progress/kendo-angular-grid';
 import { ScreenInfo } from 'src/app/models/model';
 
 @Component({
