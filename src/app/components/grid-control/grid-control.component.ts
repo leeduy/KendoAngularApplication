@@ -83,7 +83,7 @@ import { ScreenInfo } from 'src/app/models/model';
   ],
 })
 export class GridControlComponent extends GridComponent {
-  dataSourceGroup: any;
+  dataSourceGroup: any; // dataSouce using grouping
   groups: Array<GroupDescriptor>;
 
   //#region screenInfo
