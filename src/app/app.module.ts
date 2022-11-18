@@ -12,6 +12,7 @@ import { EditGridViewComponent } from './components/edit-grid-view/edit-grid-vie
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
+import { GridPagingViewComponent } from './components/grid-paging-view/grid-paging-view.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
     BasicGridViewComponent,
     GroupGridViewComponent,
     EditGridViewComponent,
+    GridPagingViewComponent,
   ],
   imports: [
     BrowserModule,
