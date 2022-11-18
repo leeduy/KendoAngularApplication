@@ -14,6 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { GridPagingViewComponent } from './components/grid-paging-view/grid-paging-view.component';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
+import { ButtonControlComponent } from './components/button-control/button-control.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { ButtonsModule } from '@progress/kendo-angular-buttons';
     GroupGridViewComponent,
     EditGridViewComponent,
     GridPagingViewComponent,
+    ButtonControlComponent,
   ],
   imports: [
     BrowserModule,

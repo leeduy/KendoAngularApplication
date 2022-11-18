@@ -17,15 +17,13 @@
       showImportButton
     "
   >
-    <button
-      kendoButton
+    <my-button
       icon="plus"
       title="Add"
-      (click)="clickAddHandler()"
+      (clickHandler)="clickAddHandler()"
       *ngIf="showAddButton"
+      >Add</my-button
     >
-      Add
-    </button>
     <button
       kendoButton
       icon="trash"
