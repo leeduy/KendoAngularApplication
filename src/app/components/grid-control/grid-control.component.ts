@@ -31,7 +31,9 @@ import {
   GroupsService,
   LocalDataChangesService,
   NavigationService,
+  PageChangeEvent,
   PagerContextService,
+  PagerSettings,
   PDFService,
   ResponsiveService,
   ScrollRequestService,
@@ -228,8 +230,70 @@ export class GridControlComponent extends GridComponent {
   }
   //#endregion editTemplates
 
+  //#region allowPaging
+  private _allowPaging: PagerSettings | boolean = true;
+  @Input()
+  public set allowPaging(value: PagerSettings | boolean) {
+    this._allowPaging = value;
+
+    if (this._allowPaging === false) {
+      this.pageIndex = null;
+      this.myPageSize = null;
+    } else if (this._allowPaging === true) {
+      this.pageIndex = 0;
+      this.myPageSize = 20;
+    }
+  }
+  public get allowPaging(): PagerSettings | boolean {
+    return this._allowPaging;
+  }
+  //#endregion allowPaging
+
+  //#region pageIndex
+  private _pageIndex: number | null | undefined = 0;
+  @Input()
+  public set pageIndex(value: number | null | undefined) {
+    this._pageIndex = value;
+
+    if (
+      this._pageIndex !== null &&
+      this._pageIndex !== undefined &&
+      this.allowPaging == true &&
+      this.myPageSize &&
+      this.myPageSize > 0
+    ) {
+      this.skip = this._pageIndex * this.myPageSize;
+    }
+  }
+  public get pageIndex(): number | null | undefined {
+    return this._pageIndex;
+  }
+  //#endregion pageIndex
+
+  //#region pageSize
+  private _myPageSize: number | null | undefined = 20;
+  @Input()
+  public set myPageSize(value: number | null | undefined) {
+    this._myPageSize = value;
+
+    if (
+      this.pageIndex !== null &&
+      this.pageIndex !== undefined &&
+      this.allowPaging == true &&
+      this._myPageSize &&
+      this._myPageSize > 0
+    ) {
+      this.skip = this.pageIndex * this._myPageSize;
+    }
+  }
+  public get myPageSize(): number | null | undefined {
+    return this._myPageSize;
+  }
+  //#endregion pageSize
+
   @Input() editable: boolean;
   @Output() editableHandler = new EventEmitter<CellClickEvent>();
+  @Output() pageChangeHandler = new EventEmitter<PageChangeEvent>();
 
   constructor(
     supportService: BrowserSupportService,
@@ -303,6 +367,10 @@ export class GridControlComponent extends GridComponent {
         );
       }
     }
+  }
+
+  pageChangedHandler(event: PageChangeEvent): void {
+    this.pageChangeHandler.emit(event);
   }
 
   override ngOnInit(): void {}

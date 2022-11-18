@@ -2,6 +2,10 @@
   [data]="dataSource || dataSourceGroup"
   [group]="groups"
   (cellClick)="editable ? cellClickHandler($event) : null"
+  [pageable]="allowPaging"
+  [skip]="skip"
+  [pageSize]="myPageSize"
+  (pageChange)="pageChangedHandler($event)"
 >
   <kendo-grid-column
     *ngFor="let screen of screenInfo"
