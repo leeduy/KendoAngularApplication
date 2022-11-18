@@ -309,10 +309,6 @@ export class GridControlComponent extends GridComponent {
   override ngAfterViewInit(): void {}
 
   createFormGroup(dataItem: any): FormGroup {
-    return this.formBuilder.group({
-      ProductID: dataItem.ProductID,
-      ProductName: dataItem.ProductName,
-      UnitPrice: dataItem.UnitPrice,
-    });
+    return this.formBuilder.group(dataItem);
   }
 }
