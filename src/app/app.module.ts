@@ -13,6 +13,8 @@ import { InputsModule } from '@progress/kendo-angular-inputs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { GridPagingViewComponent } from './components/grid-paging-view/grid-paging-view.component';
+import { ButtonsModule } from '@progress/kendo-angular-buttons';
+
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import { GridPagingViewComponent } from './components/grid-paging-view/grid-pagi
     BrowserAnimationsModule,
     ReactiveFormsModule,
     DropDownListModule,
+    ButtonsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

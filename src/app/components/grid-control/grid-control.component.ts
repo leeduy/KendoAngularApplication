@@ -295,6 +295,21 @@ export class GridControlComponent extends GridComponent {
   @Output() editableHandler = new EventEmitter<CellClickEvent>();
   @Output() pageChangeHandler = new EventEmitter<PageChangeEvent>();
 
+  @Input() showAddButton = true;
+  @Output() addHandler = new EventEmitter();
+
+  @Input() showDeleteButton = true;
+  @Output() deleteHandler = new EventEmitter();
+
+  @Input() showEditButton = true;
+  @Output() editHandler = new EventEmitter();
+
+  @Input() showImportButton = true;
+  @Output() importHandler = new EventEmitter();
+
+  @Input() showExportButton = true;
+  @Output() exportHandler = new EventEmitter();
+
   constructor(
     supportService: BrowserSupportService,
     selectionService: SelectionService,
@@ -379,5 +394,50 @@ export class GridControlComponent extends GridComponent {
 
   createFormGroup(dataItem: any): FormGroup {
     return this.formBuilder.group(dataItem);
+  }
+
+  clickAddHandler(): void {
+    if (this.addHandler.observed) {
+      this.addHandler.emit();
+    } else {
+      // chạy code mặc định
+      console.log('Add Handler');
+    }
+  }
+
+  clickDeleteHandler(): void {
+    if (this.deleteHandler.observed) {
+      this.deleteHandler.emit();
+    } else {
+      // chạy code mặc định
+      console.log('Delete Handler');
+    }
+  }
+
+  clickEditHandler(): void {
+    if (this.editHandler.observed) {
+      this.editHandler.emit();
+    } else {
+      // chạy code mặc định
+      console.log('Edit Handler');
+    }
+  }
+
+  clickExportHandler(): void {
+    if (this.exportHandler.observed) {
+      this.exportHandler.emit();
+    } else {
+      // chạy code mặc định
+      console.log('Export Handler');
+    }
+  }
+
+  clickImportHandler(): void {
+    if (this.importHandler.observed) {
+      this.importHandler.emit();
+    } else {
+      // chạy code mặc định
+      console.log('Import Handler');
+    }
   }
 }
