@@ -26,6 +26,7 @@ import {
   FilterService,
   FocusRoot,
   GridComponent,
+  GridDataResult,
   GroupInfoService,
   GroupsService,
   LocalDataChangesService,
@@ -138,9 +139,9 @@ export class GridControlComponent extends GridComponent {
   //#endregion screenInfo
 
   //#region dataSource
-  private _dataSource: any;
+  private _dataSource: GridDataResult | any;
   @Input()
-  public set dataSource(value: any) {
+  public set dataSource(value: GridDataResult | any) {
     this._dataSource = value;
 
     if (this.groups?.length > 0 && this._dataSource != null) {
@@ -148,7 +149,7 @@ export class GridControlComponent extends GridComponent {
       this.dataSource = null;
     }
   }
-  public get dataSource(): any {
+  public get dataSource(): GridDataResult | any {
     return this._dataSource;
   }
   //#endregion dataSource
